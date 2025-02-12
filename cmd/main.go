@@ -1,6 +1,54 @@
 package main
 
 import (
+	//"encoding/json"
+	"fmt"
+	"log"
+	"net/http"
+	"os"
+	"server_go/internal/domain"
+	"server_go/internal/user"
+	"context"
+)
+
+func main() {
+	server := http.NewServeMux()
+	db := user.DB{
+		Users: []domain.User{{
+			ID:        1,
+			FirstName: "Amado",
+			LastName:  "Damis",
+			Email:     "amadodamis@gmail.com",
+		}, {
+			ID:        2,
+			FirstName: "Javier",
+			LastName:  "Milei",
+			Email:     "JavierMilei@gmail.com",
+		}, {
+			ID:        3,
+			FirstName: "Jair",
+			LastName:  "Bolsonaro",
+			Email:     "JairBolsonaro@gmail.com",
+		}},
+		MaxUserID: 3,
+	}
+
+	logger := log.New(os.Stdout, "", log.LstdFlags|log.Lshortfile)
+	repo := user.NewRepo(db, logger)
+	service := user.NewService(logger, repo)
+
+	ctx := context.Background()
+
+	server.HandleFunc("/users", user.MakeEndPoints(ctx,service))
+	fmt.Println("Server started at port 8080")
+	log.Fatal(http.ListenAndServe(":8080", server))
+
+}
+
+/*
+package main
+
+import (
 	"encoding/json"
 	"fmt"
 	"log"
@@ -116,3 +164,8 @@ func DataResponse(w http.ResponseWriter, status int, users interface{}) {
 	fmt.Fprintf(w, `{"status": %d, "data":%s}`, status, value)
 
 }
+
+
+
+
+*/
