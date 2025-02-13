@@ -26,16 +26,20 @@ func NewService(l *log.Logger, repo Repository) Service {
 }
 
 func (s service) Create(ctx context.Context, firstName, lastName, email string) (*domain.User, error) {
+	
+	//recibe del POST, en el body, la informacion y la guarda en una variable.
 	user := &domain.User{
 		FirstName: firstName,
 		LastName:  lastName,
 		Email:     email,
 	}
-
+	
 	if err := s.repo.Create(ctx, user); err != nil {
 		return nil, err
 	}
+	
 	s.log.Println("service Create")
+
 	return user, nil
 }
 
