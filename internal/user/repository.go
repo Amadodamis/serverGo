@@ -23,9 +23,9 @@ type (
 	}
 )
 
-func NewRepo(db DB, l *log.Logger) Repository {
+func NewRepo(datab DB, l *log.Logger) Repository {
 	return &repo{
-		db:  db,
+		db:  datab,
 		log: l,
 	}
 }

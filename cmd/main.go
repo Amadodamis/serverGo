@@ -2,17 +2,19 @@ package main
 
 import (
 	//"encoding/json"
+	"context"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"server_go/internal/domain"
 	"server_go/internal/user"
-	"context"
 )
 
 func main() {
-	server := http.NewServeMux()
+	server := http.NewServeMux()  //Inicializa el servidor
+
+	//db es una base de datos. Es un objeto con 2 campos. Un slice de user, y un maxID de inicializacion.
 	db := user.DB{
 		Users: []domain.User{{
 			ID:        1,
@@ -33,13 +35,16 @@ func main() {
 		MaxUserID: 3,
 	}
 
-	logger := log.New(os.Stdout, "", log.LstdFlags|log.Lshortfile)
+	//Crea un logger con un mensaje+flags para que cada accion get/post/put/delete se manifieste con fecha horario.
+	logger := log.New(os.Stdout, "Standard output ->", log.LstdFlags|log.Lshortfile)
+
 	repo := user.NewRepo(db, logger)
 	service := user.NewService(logger, repo)
 
 	ctx := context.Background()
 
-	server.HandleFunc("/users", user.MakeEndPoints(ctx,service))
+	server.HandleFunc("/users", user.MakeEndPoints(ctx, service))
+
 	fmt.Println("Server started at port 8080")
 	log.Fatal(http.ListenAndServe(":8080", server))
 
