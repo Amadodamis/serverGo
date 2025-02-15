@@ -58,7 +58,7 @@ func encodeResponse(ctx context.Context, w http.ResponseWriter, resp interface{}
 	status := http.StatusOK
 	w.WriteHeader(status)
 	w.Header().Set("Content-Type", "application/-json; charset=utf-8")
-	fmt.Fprintf(w, `{"status" %d, "data":%s}`, status, data)
+	fmt.Fprintf(w, `{"status": %d, "data":%s}`, status, data)
 	return nil
 }
 
