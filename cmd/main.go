@@ -1,13 +1,13 @@
 package main
 
 import (
-	//"encoding/json"
 	"context"
 	"fmt"
 	"log"
 	"net/http"
 	"server_go/internal/user"
 	"server_go/pkg/bootstrap"
+	"server_go/pkg/handler"
 )
 
 func main() {
@@ -24,8 +24,7 @@ func main() {
 	service := user.NewService(logger, repo)
 
 	ctx := context.Background()
-
-	server.HandleFunc("/users", user.MakeEndPoints(ctx, service))
+	handler.NewUserHTTPServer(ctx, server,user.MakeEndPoints(ctx, service))
 
 	fmt.Println("Server started at port 8080")
 	log.Fatal(http.ListenAndServe(":8080", server))
